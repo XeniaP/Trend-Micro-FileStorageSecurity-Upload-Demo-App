@@ -44,12 +44,13 @@
             // var image = new Image()
             let reader = new FileReader()
             reader.onload = (e) => {
-              console.log('length: ', e.target.result.includes('data:image/jpeg'))
+              var stringa = e.target.result
+              console.log('length: ', type(e.target.result))
               /*if (!e.target.result.includes('data:image/jpeg')) {
                 return alert('Wrong file type - JPG only.')
               }*/
               if (e.target.result.length > MAX_IMAGE_SIZE) {
-                return alert('Image is loo large.')
+                return alert('File is loo large.')
               }
               this.image = e.target.result
             }
