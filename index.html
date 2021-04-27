@@ -10,15 +10,14 @@
       <h1>S3 Uploader Test</h1>
   
       <div v-if="!image">
-        <h2>Select an image</h2>
+        <h2>Select a File</h2>
         <input type="file" @change="onFileChange">
       </div>
       <div v-else>
-        <img :src="image" />
-        <button v-if="!uploadURL" @click="removeImage">Remove image</button>
-        <button v-if="!uploadURL" @click="uploadImage">Upload image</button>
+        <button v-if="!uploadURL" @click="removeImage">Remove File</button>
+        <button v-if="!uploadURL" @click="uploadImage">Upload File</button>
       </div>
-      <h2 v-if="uploadURL">Success! Image uploaded to bucket.</h2>
+      <h2 v-if="uploadURL">Success! File uploaded to bucket.</h2>
     </div>
   
     <script>
@@ -88,7 +87,7 @@
             })
             console.log('Result: ', result)
             // Final URL for the user doesn't need the query string params
-            //this.uploadURL = response.uploadURL.split('?')[0]
+            this.uploadURL = response.uploadURL.split('?')[0]
           }
         }
       })
