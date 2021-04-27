@@ -52,7 +52,7 @@
                   FileType = element
                   
                 }
-                this.image = e.target.result.includes(FileType)
+                this.image = e.target.result
               });
               
             }
@@ -72,6 +72,7 @@
             console.log('Response: ', response)
             console.log('Uploading: ', this.image)
             console.log(this.image)
+            console.log(FileType)
             let binary = atob(this.image.split(',')[1])
             let array = []
             for (var i = 0; i < binary.length; i++) {
