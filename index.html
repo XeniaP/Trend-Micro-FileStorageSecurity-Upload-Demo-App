@@ -67,7 +67,8 @@
             // Get the presigned URL
             const response = await axios({
               method: 'GET',
-              url: API_ENDPOINT
+              url: API_ENDPOINT,
+              type: FileType
             })
             console.log('Response: ', response)
             console.log('Uploading: ', this.image)
