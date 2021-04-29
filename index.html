@@ -27,7 +27,7 @@
       /* ENTER YOUR ENDPOINT HERE */
 
       const API_ENDPOINT = 'https://g63hduvf2b.execute-api.us-east-1.amazonaws.com/' // e.g. https://ab1234ab123.execute-api.us-east-1.amazonaws.com/uploads
-      const MIMETypes = ["text/plain","application/x-zip-compressed","audio/aac","application/x-abiword","application/octet-stream","video/x-msvideo","application/vnd.amazon.ebook","application/octet-stream","application/x-bzip","application/x-bzip2","application/x-csh","text/css","text/csv","application/msword","application/epub+zip","image/gif","text/html","image/x-icon","text/calendar","application/java-archive","image/jpeg","application/javascript","application/json","audio/midi","video/mpeg","application/vnd.apple.installer+xml","application/vnd.oasis.opendocument.presentation","application/vnd.oasis.opendocument.spreadsheet","application/vnd.oasis.opendocument.text","audio/ogg","video/ogg","application/ogg","application/pdf","application/vnd.ms-powerpoint","application/x-rar-compressed","application/rtf","application/x-sh","image/svg+xml","application/x-shockwave-flash","application/x-tar","image/tiff","font/ttf","application/vnd.visio","audio/x-wav","audio/webm","video/webm","image/webp","font/woff","font/woff2","application/xhtml+xml","application/vnd.ms-excel","application/xml","application/vnd.mozilla.xul+xml","application/zip","video/3gpp","audio/3gpp","video/3gpp2","audio/3gpp2","application/x-7z-compressed"]
+      const MIMETypes = ["image/png","text/plain","application/x-zip-compressed","audio/aac","application/x-abiword","application/octet-stream","video/x-msvideo","application/vnd.amazon.ebook","application/octet-stream","application/x-bzip","application/x-bzip2","application/x-csh","text/css","text/csv","application/msword","application/epub+zip","image/gif","text/html","image/x-icon","text/calendar","application/java-archive","image/jpeg","application/javascript","application/json","audio/midi","video/mpeg","application/vnd.apple.installer+xml","application/vnd.oasis.opendocument.presentation","application/vnd.oasis.opendocument.spreadsheet","application/vnd.oasis.opendocument.text","audio/ogg","video/ogg","application/ogg","application/pdf","application/vnd.ms-powerpoint","application/x-rar-compressed","application/rtf","application/x-sh","image/svg+xml","application/x-shockwave-flash","application/x-tar","image/tiff","font/ttf","application/vnd.visio","audio/x-wav","audio/webm","video/webm","image/webp","font/woff","font/woff2","application/xhtml+xml","application/vnd.ms-excel","application/xml","application/vnd.mozilla.xul+xml","application/zip","video/3gpp","audio/3gpp","video/3gpp2","audio/3gpp2","application/x-7z-compressed"]
       var FileType = ""
       function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -49,16 +49,12 @@
             // var image = new Image()
             let reader = new FileReader()
             reader.onload = (e) => {
-              console.log(e.target.result)
               MIMETypes.forEach(element => {
-                console.log(element)
                 if(e.target.result.includes(element)){
-                  console.log(element)
-                  console.log('length: ', e.target.result.includes(element))
                   FileType = element
                 }
                 this.image = e.target.result
-                console.log(FileType)
+                //console.log(FileType)
               });
               if (!FileType) {
                   return alert('File Extension is not permit')
@@ -81,10 +77,6 @@
               method: 'GET',
               url: API_ENDPOINT+"uploads?filetype="+FileType,
             })
-            console.log('Response: ', response)
-            console.log('Uploading: ', this.image)
-            console.log(this.image)
-            console.log(FileType)
             let binary = atob(this.image.split(',')[1])
             let array = []
             for (var i = 0; i < binary.length; i++) {
@@ -96,15 +88,10 @@
               method: 'PUT',
               body: blobData
             })
-            console.log('Result: ', result)
             // Final URL for the user doesn't need the query string params
             finalURL = response.uploadURL.split('?')[0]
-            
-            console.log("TESTS",finalURL.split("/"))
             var url = finalURL.split("/")[2]
             var filename = finalURL.split("/")[3]
-            console.log("Bucket name", url.split(".")[0])
-            console.log("FileName", filename)
                 setTimeout(function () {
                 }, 5000)
                 const response2 = await axios({
@@ -115,7 +102,6 @@
                     key: finalURL.split("/")[3]
                   }
                 })
-                console.log("result2", response2["fss-scanned"])
                 if(response2["fss-scanned"] == true || response2["fss-scanned"] == "true"){
                   this.uploadURL = finalURL
                   this.HTMLcontent = `
@@ -123,9 +109,6 @@
                         <div>Scan Result = ${response2["fss-scan-result"]}</div>
                         <div>Scan Date = ${response2["fss-scan-date"]}</div>
                     `;
-
-                  console.log("result2", response2)
-                  console.log("len", response2.toString().length)
                 }else{
                     this.HTMLcontent = `
                         <div>Scanned = ${response2["fss-scanned"]}</div>
