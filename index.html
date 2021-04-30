@@ -18,6 +18,7 @@
         <button v-if="!uploadURL" @click="uploadImage">Upload File</button>
       </div>
       <h2 v-if="uploadURL">Success! File uploaded to bucket.</h2>
+      <h2 v-if="uploading">Uploading file ....</h2>
       <span v-html="HTMLcontent"></span>
     </div>
   
@@ -37,7 +38,8 @@
         data: {
           image: '',
           uploadURL: '',
-          scanResult: ''
+          scanResult: '',
+          uploading: ''
         },
         methods: {
           onFileChange (e) {
@@ -72,7 +74,7 @@
           uploadImage: async function (e) {
             console.log('Upload clicked')
             // Get the presigned URL
-            this.HTMLcontent = `<div> Uploading file .... </div> `;
+            this.uploading = `<div> Uploading file .... </div> `;
             console.log(FileType)
             const response = await axios({
               method: 'GET',
@@ -89,6 +91,7 @@
               method: 'PUT',
               body: blobData
             })
+            
             // Final URL for the user doesn't need the query string params
             finalURL = response.uploadURL.split('?')[0]
             var url = finalURL.split("/")[2]
@@ -105,7 +108,7 @@
                 })
                 if(response2["fss-scanned"] == true || response2["fss-scanned"] == "true"){
                   this.uploadURL = finalURL
-                  this.HTMLcontent= ""
+                  this.uploading= ""
                   this.HTMLcontent = `
                         <div>Scanned = ${response2["fss-scanned"]}</div>
                         <div>Scan Result = ${response2["fss-scan-result"]}</div>
