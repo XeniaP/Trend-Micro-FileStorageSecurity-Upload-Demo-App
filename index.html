@@ -72,6 +72,7 @@
           uploadImage: async function (e) {
             console.log('Upload clicked')
             // Get the presigned URL
+            this.HTMLcontent = `<div> Uploading file .... </div> `;
             console.log(FileType)
             const response = await axios({
               method: 'GET',
@@ -104,6 +105,7 @@
                 })
                 if(response2["fss-scanned"] == true || response2["fss-scanned"] == "true"){
                   this.uploadURL = finalURL
+                  this.HTMLcontent= ""
                   this.HTMLcontent = `
                         <div>Scanned = ${response2["fss-scanned"]}</div>
                         <div>Scan Result = ${response2["fss-scan-result"]}</div>
