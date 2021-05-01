@@ -1,0 +1,151 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Upload APP - Demo C1 - FSS
+Transform: AWS::Serverless-2016-10-31
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: '[ Customizable section ]'
+        Parameters:
+        - S3BucketToScan
+        - ScannerAWSAccount
+        - ExternalID
+        - ScannerSQSURL
+    ParameterLabels:
+      S3BucketToScan:
+        default: S3BucketToScan
+      ScannerAWSAccount:
+        default: ScannerAWSAccount
+      ExternalID:
+        default: ExternalID
+      ScannerSQSURL:
+        default: ScannerSQSURL
+Parameters:
+  S3BucketToScan:
+    AllowedPattern: ^[0-9a-z]+([0-9a-z-]*[0-9a-z])*$
+    ConstraintDescription: S3 bucket name can include numbers, lowercase letters,
+      and hyphens (-). It cannot start or end with a hyphen (-).
+    Description: The S3 bucket to scan. Specify an the name of S3 Scan.
+    Default: 'test'
+    Type: String
+  ExternalID:
+    Description: The External ID, You can get the External ID from the ScannerStack
+      Parameters or by API https://cloudone.trendmicro.com/docs/file-storage-security/api-reference/#tag/External-ID
+    Default: '102847668301'
+    Type: String
+  ScannerAWSAccount:
+    Description: ''
+    Default: '846753579733'
+    Type: String
+  ScannerSQSURL:
+    Description: Scanner SQS URL, you can get the ScannerSQSURL from ScannerStack
+      Outputs or by API https://cloudone.trendmicro.com/docs/file-storage-security/api-reference/tag/Stack#operation/describeStackByID
+    Default: 'https://sqs.us-east-1.amazonaws.com/846753579733/ScannerFSS-ScannerQueue-QCRQPO5RIJO0'
+    Type: String
+Resources:
+  tmapi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowMethods:
+        - GET
+        - POST
+        - DELETE
+        - OPTIONS
+        AllowHeaders:
+        - '*'
+        AllowOrigins:
+        - '*'
+  CheckResultScan:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://upload-app-fss-demo/850318e9f246f6d787938da6300ae2f8
+      Handler: resultScan.handler
+      Runtime: nodejs12.x
+      Timeout: 3
+      MemorySize: 128
+      Environment:
+        Variables:
+          UploadBucket:
+            Ref: S3UploadBucket
+      Policies:
+      - S3FullAccessPolicy:
+          BucketName:
+            Ref: S3UploadBucket
+      Events:
+        UploadAssetAPI:
+          Type: HttpApi
+          Properties:
+            Path: /status
+            Method: post
+            ApiId:
+              Ref: tmapi
+  UploadRequestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://upload-app-fss-demo/850318e9f246f6d787938da6300ae2f8
+      Handler: uploader.handler
+      Runtime: nodejs12.x
+      Timeout: 3
+      MemorySize: 128
+      Environment:
+        Variables:
+          UploadBucket:
+            Ref: S3UploadBucket
+      Policies:
+      - S3WritePolicy:
+          BucketName:
+            Ref: S3UploadBucket
+      - LambdaInvokePolicy:
+          FunctionName:
+            Ref: CheckResultScan
+      Events:
+        UploadAssetAPI:
+          Type: HttpApi
+          Properties:
+            Path: /uploads
+            Method: get
+            ApiId:
+              Ref: tmapi
+  S3UploadBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders:
+          - '*'
+          AllowedMethods:
+          - GET
+          - PUT
+          - HEAD
+          AllowedOrigins:
+          - '*'
+  StorageStackFSS:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/upload-app-fss-demo/9de82f9bbb4b8c44c7d2d4c4cd272202.template
+      Parameters:
+        ExternalID:
+          Ref: ExternalID
+        ScannerAWSAccount:
+          Ref: ScannerAWSAccount
+        S3BucketToScan:
+          Ref: S3UploadBucket
+        ScannerSQSURL:
+          Ref: ScannerSQSURL
+Outputs:
+  APIendpoint:
+    Description: HTTP API endpoint URL
+    Value:
+      Fn::Sub: https://${tmapi}.execute-api.${AWS::Region}.amazonaws.com
+  S3UploadBucketName:
+    Description: Upload Application for Demo C1 - FSS
+    Value:
+      Ref: S3UploadBucket
+  StorageStackManagementRoleARN:
+    Description: The ARN of the IAM role for File Storage Security backend services
+      to manage the deployed resources.
+    Value:
+      Fn::GetAtt:
+      - StorageStackFSS
+      - Outputs.StorageStackManagementRoleARN
