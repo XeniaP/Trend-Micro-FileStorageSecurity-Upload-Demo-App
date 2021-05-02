@@ -44,7 +44,7 @@ sam deploy --guided
 
 11) Use the application
 
-![caption](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/f2cab6e7ecc330c3c1b8c0caeb0d4093593db605/Img/use-app.gif)
+![caption](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/75fee3a52f78ab270f2e432c5cc725d6e9b42fba/Img/use-app.gif)
 
 
 
