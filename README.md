@@ -1,4 +1,8 @@
-# Serverless-Example-S3
+# Serverless-Example-S3-Upload-Interface-for-Demo-of-FileStorage-Security
+
+Architecture
+
+![Image of Architecture](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/0ff19e2c977edbb19044ca5312512e9777458a37/Img/Architecture.jpeg)
 
 Guide
 
