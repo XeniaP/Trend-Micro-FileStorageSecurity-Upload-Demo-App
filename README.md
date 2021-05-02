@@ -1,10 +1,11 @@
-# Serverless-Example-S3-Upload-Interface-for-Demo-of-FileStorage-Security
+# Serverless-Example-S3-Upload-Interface-for-Demo-of-CloudOne-FileStorage-Security
+[Cloud One - File Storage Security Trial -](https://cloudone.trendmicro.com/) 
 
-Architecture
+## Architecture
 
 ![Image of Architecture](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/0ff19e2c977edbb19044ca5312512e9777458a37/Img/Architecture.jpeg)
 
-Guide
+## Guide
 
 1) [Install SAM-CLI -](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) 
 2) [Install AWS-CLI -](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
@@ -53,6 +54,10 @@ sam deploy --guided
 
 
 
-NOTES:
+##NOTES:
 For Delete first Empty de S3 Bucket created in Deploy and Delete de Root Stack and delete storage in Cloud One File Storage
- 
+
+##Contributing
+If you encounter a bug, think of a useful feature, or find something confusing in the docs, please create a new issue!
+We ❤️ pull requests.
+
