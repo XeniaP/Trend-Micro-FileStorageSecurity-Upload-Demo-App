@@ -54,10 +54,10 @@ sam deploy --guided
 
 
 
-##NOTES:
+## NOTES:
 For Delete first Empty de S3 Bucket created in Deploy and Delete de Root Stack and delete storage in Cloud One File Storage
 
-##Contributing
+## Contributing
 If you encounter a bug, think of a useful feature, or find something confusing in the docs, please create a new issue!
 We ❤️ pull requests.
 
