@@ -18,13 +18,14 @@ cd Upload-Demo-C1-FSS
 ```
 sam deploy --guided
 ```
-    ![Image of SAM Deploy](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/f2cab6e7ecc330c3c1b8c0caeb0d4093593db605/Img/deploy-guided-ss.PNG)
+    
+![Image of SAM Deploy](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/f2cab6e7ecc330c3c1b8c0caeb0d4093593db605/Img/deploy-guided-ss.PNG)
 
-    Follow the wizard and complete the requested Values:
-        Parameter S3BucketToScan: 
-        Parameter ExternalID: 
-        Parameter ScannerAWSAccount: 
-        Parameter ScannerSQSURL: 
+   > Follow the wizard and complete the requested Values:
+		Parameter S3BucketToScan:
+		Parameter ExternalID:
+		Parameter ScannerAWSAccount:
+		Parameter ScannerSQSURL:
 
 8) Copy the API-gateway-value in gui/index.html, you can get the HTTP API endpoint URL from outputs in sam-cli or CloudFormation Stack.
     ![Image of get Api URL](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/f2cab6e7ecc330c3c1b8c0caeb0d4093593db605/Img/api-gateway-value.png)
@@ -49,5 +50,5 @@ sam deploy --guided
 
 
 NOTES:
-For Delete first Empty de S3 Bucket created in Deeploy and Delete de Root Stack and delete storage in Cloud One File Storage
+For Delete first Empty de S3 Bucket created in Deploy and Delete de Root Stack and delete storage in Cloud One File Storage
  
