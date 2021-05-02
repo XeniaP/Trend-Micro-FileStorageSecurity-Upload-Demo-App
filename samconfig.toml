@@ -2,9 +2,9 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "upload-app"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-fzz49c7ezobx"
-s3_prefix = "upload-app"
+stack_name = "application-name"
+s3_bucket = "s3-bucket-name-for-storage-application"
+s3_prefix = ""
 region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"

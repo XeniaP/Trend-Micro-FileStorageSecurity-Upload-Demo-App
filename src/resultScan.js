@@ -7,6 +7,7 @@ exports.handler = async (event) => {
     const bucket = params["bucket"]
     const objectKey = params["key"]
       let tags;
+      console.log("-----INICIO-----")
       try {
         for (let step = 0; step < 100; step++) {
           tags = await getObjectTags(bucket, objectKey);
@@ -14,6 +15,7 @@ exports.handler = async (event) => {
             break;
           }
         }
+        console.log(tags)
         if(Object.keys(tags).length>0 && tags["fss-scanned"]){
           console.log(tags)
           return tags
@@ -49,5 +51,3 @@ const getObjectTags = (bucket, objectKey) => new Promise((resolve, reject) => {
     }
   });
 });
-
-

@@ -42,6 +42,10 @@ Parameters:
       Outputs or by API https://cloudone.trendmicro.com/docs/file-storage-security/api-reference/tag/Stack#operation/describeStackByID
     Default: 'https://sqs.us-east-1.amazonaws.com/846753579733/ScannerFSS-ScannerQueue-QCRQPO5RIJO0'
     Type: String
+  AWSRegion:
+    Description: AWS Region 
+    Default: 'us-east-1'
+    Type: String
 Resources:
   tmapi:
     Type: AWS::Serverless::HttpApi
