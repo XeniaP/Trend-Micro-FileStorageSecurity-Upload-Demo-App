@@ -44,9 +44,10 @@ sam deploy --guided
 
 11) Use the application
 
-[![Watch the video](https://i.imgur.com/vKb2F1B.png)](https://youtu.be/vt5fpE0bzSY)
+![caption](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/f2cab6e7ecc330c3c1b8c0caeb0d4093593db605/Img/use-app.gif)
 
 
 
-
+NOTES:
+For Delete first Empty de S3 Bucket created in Deeploy and Delete de Root Stack and delete storage in Cloud One File Storage
  
