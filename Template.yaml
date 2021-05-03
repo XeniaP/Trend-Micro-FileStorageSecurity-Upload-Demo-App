@@ -4,13 +4,13 @@ Transform: AWS::Serverless-2016-10-31
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
-      - Label:
-          default: '[ Customizable section ]'
-        Parameters:
-        - S3BucketToScan
-        - ScannerAWSAccount
-        - ExternalID
-        - ScannerSQSURL
+    - Label:
+        default: '[ Customizable section ]'
+      Parameters:
+      - S3BucketToScan
+      - ScannerAWSAccount
+      - ExternalID
+      - ScannerSQSURL
     ParameterLabels:
       S3BucketToScan:
         default: S3BucketToScan
@@ -26,7 +26,7 @@ Parameters:
     ConstraintDescription: S3 bucket name can include numbers, lowercase letters,
       and hyphens (-). It cannot start or end with a hyphen (-).
     Description: The S3 bucket to scan. Specify an the name of S3 Scan.
-    Default: 'test'
+    Default: test
     Type: String
   ExternalID:
     Description: The External ID, You can get the External ID from the ScannerStack
@@ -40,11 +40,11 @@ Parameters:
   ScannerSQSURL:
     Description: Scanner SQS URL, you can get the ScannerSQSURL from ScannerStack
       Outputs or by API https://cloudone.trendmicro.com/docs/file-storage-security/api-reference/tag/Stack#operation/describeStackByID
-    Default: 'https://sqs.us-east-1.amazonaws.com/846753579733/ScannerFSS-ScannerQueue-QCRQPO5RIJO0'
+    Default: https://sqs.us-east-1.amazonaws.com/846753579733/ScannerFSS-ScannerQueue-QCRQPO5RIJO0
     Type: String
   AWSRegion:
-    Description: AWS Region 
-    Default: 'us-east-1'
+    Description: AWS Region
+    Default: us-east-1
     Type: String
 Resources:
   tmapi:
@@ -63,7 +63,7 @@ Resources:
   CheckResultScan:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://upload-app-fss-demo/850318e9f246f6d787938da6300ae2f8
+      CodeUri: src/resultScan.js
       Handler: resultScan.handler
       Runtime: nodejs12.x
       Timeout: 3
@@ -87,7 +87,7 @@ Resources:
   UploadRequestFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://upload-app-fss-demo/850318e9f246f6d787938da6300ae2f8
+      CodeUri: src/uploader.js
       Handler: uploader.handler
       Runtime: nodejs12.x
       Timeout: 3
