@@ -23,14 +23,12 @@ sam package --template-file Template.yaml --s3-bucket <Bucket-Name-Created-Step-
 sam package --output-template-file Template.yaml --s3-bucket <Bucket-Name-Created-Step-5>
 ```
 8) Edit this values in samconfig.toml without <>
-
+```
 stack_name = <Name-Of-Deployment>
-
 s3_bucket = <Name-Bucket-Created-Step-5>
-
 region = <AWS-Region>
-
 parameter_overrides = "S3BucketToScan=\"<Name-Of-Bucket-To-Scan>\" ExternalID=\"<ExternalID>\" ScannerAWSAccount=\"<AWS-Account-ID>\" ScannerSQSURL=\"<ScannerSQSURL>" AWSRegion=\"<AWS-Region>\""
+```
 
 >**NOTE:** S3BucketToScan It's the name it's for a new S3 Bucket
 
