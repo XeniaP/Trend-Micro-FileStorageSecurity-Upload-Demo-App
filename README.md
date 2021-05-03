@@ -10,18 +10,20 @@
 1) [Install SAM-CLI -](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) 
 2) [Install AWS-CLI -](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
 3) [Configure AWS-CLI -](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html)
-4) Create and S3 Bucket for Storage code and files- [How-to](https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html)
-5) Clone this repository 
+4) [Deploy Cloud One File Storage Security - Scanner Stack](https://cloudone.trendmicro.com/docs/file-storage-security/stack-add/#AddScanner).
+5) Create and S3 Bucket for Storage code and files- [How-to](https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html)
+6) Clone this repository 
 ```
 git clone https://github.com/XeniaP/Upload-Demo-C1-FSS.git
 cd Upload-Demo-C1-FSS
 ```
-6) Edit this variables in file samconfig.toml
-    stack_name = <name-of-application>
-    s3_bucket = <s3-bucket-name-created-in-step-2>
-7) Deploy application with next command:
+7) Copy files to S3 for Storage Code and File, with the next Commands:
 ```
-sam deploy --guided
+sam package --template-file .\Template.yaml --s3-bucket upload-app-fss-demo  
+```
+8) Deploy application with next command:
+```
+sam deploy -t .\Template.yaml --guided
 ```
     
 ![Image of SAM Deploy](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/f2cab6e7ecc330c3c1b8c0caeb0d4093593db605/Img/deploy-guided-ss.PNG)
@@ -31,6 +33,8 @@ sam deploy --guided
 		Parameter ExternalID:
 		Parameter ScannerAWSAccount:
 		Parameter ScannerSQSURL:
+
+>**NOTE:** The values for ExternalID, ScannerAWSAccount and ScannerSQSURL you can get from ScannerStack deployed in Step 4
 
 8) Copy the API-gateway-value in gui/index.html, you can get the HTTP API endpoint URL from outputs in sam-cli or CloudFormation Stack.
     ![Image of get Api URL](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/f2cab6e7ecc330c3c1b8c0caeb0d4093593db605/Img/api-gateway-value.png)
