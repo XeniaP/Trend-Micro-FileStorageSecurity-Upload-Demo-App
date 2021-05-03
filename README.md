@@ -1,2 +1,0 @@
-# Serverless-Example-S3
- 

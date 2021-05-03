@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CORSConfiguration xmlns="https://s3-demo-c1-as-tm-demo.s3.amazonaws.com/docs/">
-<CORSRule>
-    <AllowedOrigin>https://0.0.0.0:5002</AllowedOrigin>
-    <AllowedMethod>POST</AllowedMethod>
-    <MaxAgeSeconds>3000</MaxAgeSeconds>
-    <AllowedHeader>*</AllowedHeader>
-</CORSRule>
-</CORSConfiguration>
