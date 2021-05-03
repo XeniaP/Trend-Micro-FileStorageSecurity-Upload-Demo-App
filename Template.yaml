@@ -31,16 +31,16 @@ Parameters:
   ExternalID:
     Description: The External ID, You can get the External ID from the ScannerStack
       Parameters or by API https://cloudone.trendmicro.com/docs/file-storage-security/api-reference/#tag/External-ID
-    Default: '102847668301'
+    Default: '123456789012'
     Type: String
   ScannerAWSAccount:
     Description: ''
-    Default: '846753579733'
+    Default: '123456789012'
     Type: String
   ScannerSQSURL:
     Description: Scanner SQS URL, you can get the ScannerSQSURL from ScannerStack
       Outputs or by API https://cloudone.trendmicro.com/docs/file-storage-security/api-reference/tag/Stack#operation/describeStackByID
-    Default: https://sqs.us-east-1.amazonaws.com/846753579733/ScannerFSS-ScannerQueue-QCRQPO5RIJO0
+    Default: https://sqs.region.amazonaws.com/aws-account/ScannerFSS-ScannerQueue-
     Type: String
   AWSRegion:
     Description: AWS Region
