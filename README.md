@@ -19,11 +19,12 @@ cd Upload-Demo-C1-FSS
 ```
 7) Copy files to S3 for Storage Code and File, with the next Commands:
 ```
-sam package --template-file .\Template.yaml --s3-bucket upload-app-fss-demo  
+sam package --template-file Template.yaml --s3-bucket <Bucket-Name-Created-Step-5>
+sam package --output-template-file Template.yaml --s3-bucket <Bucket-Name-Created-Step-5>
 ```
-8) Deploy application with next command:
+8) Run Deploy Wizard in SAM-CLI:
 ```
-sam deploy -t .\Template.yaml --guided
+sam deploy -t Template.yaml --guided
 ```
     
 ![Image of SAM Deploy](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/f2cab6e7ecc330c3c1b8c0caeb0d4093593db605/Img/deploy-guided-ss.PNG)
@@ -35,6 +36,13 @@ sam deploy -t .\Template.yaml --guided
 		Parameter ScannerSQSURL:
 
 >**NOTE:** The values for ExternalID, ScannerAWSAccount and ScannerSQSURL you can get from ScannerStack deployed in Step 4
+9) Edit and Save config file created in Step 8, (Default Name: samconfig.toml)
+    s3_bucket = <Name-S3-Bucket-Created-In-Step-5>
+    s3_prefix = ""
+10) Deploy the application:
+```
+sam deploy -t Template.yaml
+```
 
 8) Copy the API-gateway-value in gui/index.html, you can get the HTTP API endpoint URL from outputs in sam-cli or CloudFormation Stack.
     ![Image of get Api URL](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/f2cab6e7ecc330c3c1b8c0caeb0d4093593db605/Img/api-gateway-value.png)

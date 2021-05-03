@@ -127,7 +127,7 @@ Resources:
   StorageStackFSS:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/upload-app-fss-demo/9de82f9bbb4b8c44c7d2d4c4cd272202.template
+      TemplateURL: Templates/FSS-Storage-Srack.template
       Parameters:
         ExternalID:
           Ref: ExternalID
