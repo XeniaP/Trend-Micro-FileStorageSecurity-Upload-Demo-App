@@ -126,8 +126,8 @@
                 })
                 this.uploadURL = finalURL
                 
-                console.log("Response2", response2[2])
-                if(response2["fss-scanned"] == true || response2["fss-scanned"] == "true"){
+                console.log("Response2", response2)
+                /*if(response2["fss-scanned"] == true || response2["fss-scanned"] == "true"){
                   this.uploadURL = finalURL
                   this.uploading= ""
                   this.HTMLcontent = `
@@ -140,7 +140,7 @@
                         <div>Scanned = ${response2["fss-scanned"]}</div>
                         <div>Scan Result = ${response2["info"]}</div>
                     `;
-                }
+                }*/
            }, 20000);
           }
         }
