@@ -111,7 +111,7 @@
             // Final URL for the user doesn't need the query string params
             finalURL = response.uploadURL.split('?')[0]
             var url = finalURL.split("/")[2]
-            var filename = finalURL.split("/")[3]
+            var filename = finalURL.split("/")[3].toString()
             console.log("url", url)
             console.log("filename", filename)
             console.log("Hello");
