@@ -114,6 +114,8 @@
             var filename = finalURL.split("/")[3]
             console.log("url", url)
             console.log("filename", filename)
+            console.log("Hello");
+            setTimeout(() => {  console.log("World!"); }, 2000);
                 const response2 = await axios({
                   method: 'POST',
                   url: API_ENDPOINT+"status",
@@ -123,8 +125,7 @@
                   }
                 })
                 this.uploadURL = finalURL
-                console.log("Hello");
-                setTimeout(() => {  console.log("World!"); }, 2000);
+                
                 console.log("Response2", response2)
                 if(response2["fss-scanned"] == true || response2["fss-scanned"] == "true"){
                   this.uploadURL = finalURL
