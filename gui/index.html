@@ -123,6 +123,8 @@
                   }
                 })
                 this.uploadURL = finalURL
+                console.log("Hello");
+                setTimeout(() => {  console.log("World!"); }, 2000);
                 console.log("Response2", response2)
                 if(response2["fss-scanned"] == true || response2["fss-scanned"] == "true"){
                   this.uploadURL = finalURL
