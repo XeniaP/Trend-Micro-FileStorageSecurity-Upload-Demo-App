@@ -111,9 +111,9 @@
             // Final URL for the user doesn't need the query string params
             finalURL = response.uploadURL.split('?')[0]
             var url = finalURL.split("/")[2]
-            var filename = finalURL.split("/")[3].toString()
+            var filename = finalURL.split("/")[3]
             console.log("url", url)
-            console.log("filename", filename)
+            console.log("filename", decodeURI(filename))
             console.log("Hello");
             setTimeout(() => {  console.log("World!"); 
                 const response2 = axios({
@@ -121,7 +121,7 @@
                   url: API_ENDPOINT+"status",
                   data: {
                     bucket: url.split(".")[0],
-                    key: finalURL.split("/")[3]
+                    key: decodeURI(finalURL.split("/")[3])
                   }
                 })
                 this.uploadURL = finalURL
