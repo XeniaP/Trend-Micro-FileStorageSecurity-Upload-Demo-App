@@ -116,7 +116,7 @@
             console.log("filename", filename)
             console.log("Hello");
             setTimeout(() => {  console.log("World!"); 
-                const response2 = await axios({
+                const response2 = axios({
                   method: 'POST',
                   url: API_ENDPOINT+"status",
                   data: {
