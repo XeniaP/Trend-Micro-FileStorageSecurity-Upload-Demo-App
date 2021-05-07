@@ -15,6 +15,9 @@
       </div>
       <div v-else>
         <img :src="image" />
+        </br>
+        <input text name="txtName" id="txtName" v-if="!uploadURL" :value="name"/>
+        </br>
         <button v-if="!uploadURL" @click="removeImage">Remove File</button>
         <button v-if="!uploadURL" @click="uploadImage">Upload File</button>
       </div>
@@ -28,7 +31,7 @@
 
       /* ENTER YOUR ENDPOINT HERE */
 
-      const API_ENDPOINT = '' // e.g. https://ab1234ab123.execute-api.us-east-1.amazonaws.com/uploads
+      const API_ENDPOINT = 'https://i8i8i8ea6g.execute-api.us-east-1.amazonaws.com/' // e.g. https://ab1234ab123.execute-api.us-east-1.amazonaws.com/uploads
       
       const MIMETypes = ["image/png","text/plain","application/x-zip-compressed","audio/aac","application/x-abiword","application/octet-stream","video/x-msvideo","application/vnd.amazon.ebook","application/octet-stream","application/x-bzip","application/x-bzip2","application/x-csh","text/css","text/csv","application/msword","application/epub+zip","image/gif","text/html","image/x-icon","text/calendar","application/java-archive","image/jpeg","application/javascript","application/json","audio/midi","video/mpeg","application/vnd.apple.installer+xml","application/vnd.oasis.opendocument.presentation","application/vnd.oasis.opendocument.spreadsheet","application/vnd.oasis.opendocument.text","audio/ogg","video/ogg","application/ogg","application/pdf","application/vnd.ms-powerpoint","application/x-rar-compressed","application/rtf","application/x-sh","image/svg+xml","application/x-shockwave-flash","application/x-tar","image/tiff","font/ttf","application/vnd.visio","audio/x-wav","audio/webm","video/webm","image/webp","font/woff","font/woff2","application/xhtml+xml","application/vnd.ms-excel","application/xml","application/vnd.mozilla.xul+xml","application/zip","video/3gpp","audio/3gpp","video/3gpp2","audio/3gpp2","application/x-7z-compressed"]
       var FileType = ""
@@ -42,18 +45,24 @@
           uploadURL: '',
           scanResult: '',
           uploading: '',
-          HTMLcontent: ''
+          HTMLcontent: '',
+          name: ''
         },
         methods: {
           onFileChange (e) {
             let files = e.target.files || e.dataTransfer.files
             if (!files.length) return
             this.createImage(files[0])
+            console.log(newText)
           },
           createImage (file) {
             // var image = new Image()
+            
+            this.name = file.name.split(".")[0]
+            console.log(this.name)
             let reader = new FileReader()
             reader.onload = (e) => {
+              console.log(e)
               MIMETypes.forEach(element => {
                 if(e.target.result.includes(element)){
                   FileType = element
@@ -66,6 +75,8 @@
                   return alert('File is loo large.')
               }
               this.image = e.target.result
+              
+              console.log(this.name)
               console.log(FileType)
             }
             reader.readAsDataURL(file)
@@ -76,12 +87,14 @@
           },
           uploadImage: async function (e) {
             console.log('Upload clicked')
+            console.log(e)
             // Get the presigned URL
             this.uploading = `<div> Uploading file .... </div> `;
             console.log(FileType)
+            console.log(document.getElementById('txtName').value)
             const response = await axios({
               method: 'GET',
-              url: API_ENDPOINT+"uploads?filetype="+FileType,
+              url: API_ENDPOINT+"uploads?filetype="+FileType+"&nameFile="+document.getElementById('txtName').value.toString(),
             })
             let binary = atob(this.image.split(',')[1])
             let array = []
@@ -89,7 +102,7 @@
               array.push(binary.charCodeAt(i))
             }
             let blobData = new Blob([new Uint8Array(array)], {type: FileType})
-            //console.log('Uploading to: ', response.uploadURL)
+            console.log('Uploading to: ', response.uploadURL)
             const result = await fetch(response.uploadURL, {
               method: 'PUT',
               body: blobData
@@ -109,13 +122,15 @@
                     key: finalURL.split("/")[3]
                   }
                 })
-                console.log(response2)
+                this.uploadURL = finalURL
+                console.log("Response2", response2)
                 if(response2["fss-scanned"] == true || response2["fss-scanned"] == "true"){
                   this.uploadURL = finalURL
                   this.uploading= ""
                   this.HTMLcontent = `
                         <div>Scanned = ${response2["fss-scanned"]}</div>
                         <div>Scan Result = ${response2["fss-scan-result"]}</div>
+                        <div>Scan Date = ${response2["fss-scan-date"]}</div>
                     `;
                 }else{
                     this.HTMLcontent = `
