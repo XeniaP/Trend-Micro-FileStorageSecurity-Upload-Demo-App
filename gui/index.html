@@ -115,7 +115,7 @@
             console.log("url", url)
             console.log("filename", filename)
             console.log("Hello");
-            setTimeout(() => {  console.log("World!"); }, 20000);
+            setTimeout(() => {  console.log("World!"); 
                 const response2 = await axios({
                   method: 'POST',
                   url: API_ENDPOINT+"status",
@@ -141,6 +141,7 @@
                         <div>Scan Result = ${response2["info"]}</div>
                     `;
                 }
+           }, 20000);
           }
         }
       })
