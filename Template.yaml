@@ -8,7 +8,7 @@ Metadata:
         default: '[ Customizable section ]'
       Parameters:
       - S3BucketToScan
-      - S3QuarantineBucket
+      - S3QuarantineBucketDemoApp
       - ScannerAWSAccount
       - ExternalID
       - ScannerSQSURL
@@ -17,8 +17,8 @@ Metadata:
     ParameterLabels:
       S3BucketToScan:
         default: S3BucketToScan
-      S3QuarantineBucket:
-        default: S3QuarantineBucket
+      S3QuarantineBucketDemoApp:
+        default: S3QuarantineBucketDemoApp
       ScannerAWSAccount:
         default: ScannerAWSAccount
       ExternalID:
@@ -37,49 +37,61 @@ Parameters:
     Description: The S3 bucket to scan. Specify an the name of S3 Scan.
     Default: test
     Type: String
-  S3QuarantineBucket:
+  S3QuarantineBucketDemoApp:
     AllowedPattern: ^[0-9a-z]+([0-9a-z-]*[0-9a-z])*$
     ConstraintDescription: S3 bucket name can include numbers, lowercase letters,
       and hyphens (-). It cannot start or end with a hyphen (-).
     Description: The S3 bucket to use for quarantine. Specify an the name of Quarantine S3.
     Default: test-quarantine
     Type: String
+
   ExternalID:
     Description: The External ID, You can get the External ID from the ScannerStack
       Parameters or by API https://cloudone.trendmicro.com/docs/file-storage-security/api-reference/#tag/External-ID
     Default: '123456789012'
     Type: String
+
   ScannerAWSAccount:
     Description: ''
     Default: '123456789012'
     Type: String
+
   ScannerSQSURL:
     Description: Scanner SQS URL, you can get the ScannerSQSURL from ScannerStack
       Outputs or by API https://cloudone.trendmicro.com/docs/file-storage-security/api-reference/tag/Stack#operation/describeStackByID
     Default: https://sqs.region.amazonaws.com/aws-account/ScannerFSS-ScannerQueue-
     Type: String
+
   AWSRegion:
     Description: AWS Region
     Default: us-east-1
     Type: String
+
   PromoteMode:
     Type: String
     AllowedValues:
     - move
     - copy
     Default: move
-    Description: |
-      The method by which files were quarantined.
-      (Options: move, copy)
+    Description: 'The method by which files were quarantined. (Options: move, copy)'
   QuarantineMode:
     Type: String
     AllowedValues:
     - move
     - copy
     Default: move
-    Description: |
-      The method by which files were quarantined.
-      (Options: move, copy)
+    Description: 'The method by which files were quarantined. (Options: move, copy)'
+Conditions:
+  PromoteEnabled:
+    Fn::Not:
+    - Fn::Equals:
+      - Ref: S3BucketToScan
+      - ''
+  QuarantineEnabled:
+    Fn::Not:
+    - Fn::Equals:
+      - Ref: S3QuarantineBucketDemoApp
+      - ''
 Resources:
   tmapi:
     Type: AWS::Serverless::HttpApi
@@ -97,7 +109,7 @@ Resources:
   CheckResultScan:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/resultScan.js
+      CodeUri: s3://upload-app-fss-demo/00e3e06be9f923eeb5897bfd6a236db3
       Handler: resultScan.handler
       Runtime: nodejs12.x
       Timeout: 3
@@ -121,7 +133,7 @@ Resources:
   UploadRequestFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/uploader.js
+      CodeUri: s3://upload-app-fss-demo/708236be30bf4b67346a764ab5e62359
       Handler: uploader.handler
       Runtime: nodejs12.x
       Timeout: 3
@@ -170,11 +182,11 @@ Resources:
           - PUT
           - HEAD
           AllowedOrigins:
-          - '*':
+          - '*'
   StorageStackFSS:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: Templates/FSS-Storage-Stack.template
+      TemplateURL: https://s3.amazonaws.com/upload-app-fss-demo/9de82f9bbb4b8c44c7d2d4c4cd272202.template
       Parameters:
         ExternalID:
           Ref: ExternalID
@@ -187,7 +199,7 @@ Resources:
   PromoteOrQuarantineLambda:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/handler.py
+      CodeUri: s3://upload-app-fss-demo/b0b59fa6c4f6e3f5ece20658ff95adfe
       Handler: handler.lambda_handler
       Runtime: python3.8
       MemorySize: 512
@@ -203,8 +215,6 @@ Resources:
             Ref: S3QuarantineBucket
           QUARANTINEMODE:
             Ref: QuarantineMode
-          ACL:
-            Ref: ACL
       Policies:
       - Statement:
           Effect: Allow
@@ -219,10 +229,6 @@ Resources:
           Action:
           - s3:PutObject
           - s3:PutObjectTagging
-          - Fn::If:
-            - PutACL
-            - s3:PutObjectAcl
-            - Ref: AWS::NoValue
           Resource:
           - Fn::If:
             - PromoteEnabled
@@ -230,7 +236,7 @@ Resources:
             - Ref: AWS::NoValue
           - Fn::If:
             - QuarantineEnabled
-            - Fn::Sub: arn:${AWS::Partition}:s3:::${S3QuarantineBucket}/*
+            - Fn::Sub: arn:${AWS::Partition}:s3:::${S3QuarantineBucketDemoApp}/*
             - Ref: AWS::NoValue
       Events:
         ScanResult:
@@ -238,8 +244,8 @@ Resources:
           Properties:
             Topic:
               Fn::GetAtt:
-                - StorageStackFSS
-                - Outputs.ScanResultTopicARN
+              - StorageStackFSS
+              - Outputs.ScanResultTopicARN
 Outputs:
   APIendpoint:
     Description: HTTP API endpoint URL
