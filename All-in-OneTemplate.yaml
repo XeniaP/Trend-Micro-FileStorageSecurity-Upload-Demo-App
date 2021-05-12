@@ -8,27 +8,15 @@ Metadata:
         default: '[ Customizable section ]'
       Parameters:
       - S3BucketToScan
-      - S3QuarantineBucket
-      - ScannerAWSAccount
       - ExternalID
-      - ScannerSQSURL
-      - PromoteMode
-      - QuarantineMode
+      - TriggerWithObjectCreatedEvent
     ParameterLabels:
       S3BucketToScan:
         default: S3BucketToScan
-      S3QuarantineBucket:
-        default: S3QuarantineBucket
-      ScannerAWSAccount:
-        default: ScannerAWSAccount
       ExternalID:
         default: ExternalID
-      ScannerSQSURL:
-        default: ScannerSQSURL
-      PromoteMode:
-        default: PromoteMode
-      QuarantineMode:
-        default: QuarantineMode
+      TriggerWithObjectCreatedEvent:
+        default: "true"
 Parameters:
   S3BucketToScan:
     AllowedPattern: ^[0-9a-z]+([0-9a-z-]*[0-9a-z])*$
@@ -37,49 +25,22 @@ Parameters:
     Description: The S3 bucket to scan. Specify an the name of S3 Scan.
     Default: test
     Type: String
-  S3QuarantineBucket:
-    AllowedPattern: ^[0-9a-z]+([0-9a-z-]*[0-9a-z])*$
-    ConstraintDescription: S3 bucket name can include numbers, lowercase letters,
-      and hyphens (-). It cannot start or end with a hyphen (-).
-    Description: The S3 bucket to use for quarantine. Specify an the name of Quarantine S3.
-    Default: test-quarantine
-    Type: String
   ExternalID:
     Description: The External ID, You can get the External ID from the ScannerStack
       Parameters or by API https://cloudone.trendmicro.com/docs/file-storage-security/api-reference/#tag/External-ID
     Default: '123456789012'
     Type: String
-  ScannerAWSAccount:
-    Description: ''
-    Default: '123456789012'
-    Type: String
-  ScannerSQSURL:
-    Description: Scanner SQS URL, you can get the ScannerSQSURL from ScannerStack
-      Outputs or by API https://cloudone.trendmicro.com/docs/file-storage-security/api-reference/tag/Stack#operation/describeStackByID
-    Default: https://sqs.region.amazonaws.com/aws-account/ScannerFSS-ScannerQueue-
+  TriggerWithObjectCreatedEvent:
+    Default: 'true'
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Description: If the s3:ObjectCreated:* event of the S3BucketToScan is in use, set this option to false. Then trigger the scans by invoking the deployed BucketListenerLambda.
     Type: String
   AWSRegion:
     Description: AWS Region
     Default: us-east-1
     Type: String
-  PromoteMode:
-    Type: String
-    AllowedValues:
-    - move
-    - copy
-    Default: move
-    Description: |
-      The method by which files were quarantined.
-      (Options: move, copy)
-  QuarantineMode:
-    Type: String
-    AllowedValues:
-    - move
-    - copy
-    Default: move
-    Description: |
-      The method by which files were quarantined.
-      (Options: move, copy)
 Resources:
   tmapi:
     Type: AWS::Serverless::HttpApi
@@ -158,88 +119,17 @@ Resources:
           - HEAD
           AllowedOrigins:
           - '*'
-  S3QuarantineBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      CorsConfiguration:
-        CorsRules:
-        - AllowedHeaders:
-          - '*'
-          AllowedMethods:
-          - GET
-          - PUT
-          - HEAD
-          AllowedOrigins:
-          - '*':
-  StorageStackFSS:
+  AllInOneFSS:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: Templates/FSS-Storage-Stack.template
+      TemplateURL: Templates/FSS-All-In-One.template
       Parameters:
         ExternalID:
           Ref: ExternalID
-        ScannerAWSAccount:
-          Ref: ScannerAWSAccount
         S3BucketToScan:
           Ref: S3UploadBucket
-        ScannerSQSURL:
-          Ref: ScannerSQSURL
-  PromoteOrQuarantineLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: src/handler.py
-      Handler: handler.lambda_handler
-      Runtime: python3.8
-      MemorySize: 512
-      Timeout: 30
-      Tracing: Active
-      Environment:
-        Variables:
-          PROMOTEBUCKET:
-            Ref: S3UploadBucket
-          PROMOTEMODE:
-            Ref: PromoteMode
-          QUARANTINEBUCKET:
-            Ref: S3QuarantineBucket
-          QUARANTINEMODE:
-            Ref: QuarantineMode
-          ACL:
-            Ref: ACL
-      Policies:
-      - Statement:
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:DeleteObject
-          - s3:GetObjectTagging
-          Resource:
-          - Fn::Sub: arn:${AWS::Partition}:s3:::${S3UploadBucket}/*
-      - Statement:
-          Effect: Allow
-          Action:
-          - s3:PutObject
-          - s3:PutObjectTagging
-          - Fn::If:
-            - PutACL
-            - s3:PutObjectAcl
-            - Ref: AWS::NoValue
-          Resource:
-          - Fn::If:
-            - PromoteEnabled
-            - Fn::Sub: arn:${AWS::Partition}:s3:::${S3UploadBucket}/*
-            - Ref: AWS::NoValue
-          - Fn::If:
-            - QuarantineEnabled
-            - Fn::Sub: arn:${AWS::Partition}:s3:::${S3QuarantineBucket}/*
-            - Ref: AWS::NoValue
-      Events:
-        ScanResult:
-          Type: SNS
-          Properties:
-            Topic:
-              Fn::GetAtt:
-                - StorageStackFSS
-                - Outputs.ScanResultTopicARN
+        TriggerWithObjectCreatedEvent:
+          Ref: TriggerWithObjectCreatedEvent
 Outputs:
   APIendpoint:
     Description: HTTP API endpoint URL

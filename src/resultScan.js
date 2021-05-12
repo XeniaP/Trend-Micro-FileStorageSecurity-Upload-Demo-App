@@ -3,32 +3,23 @@ const s3 = new AWS.S3({ apiVersion: '2006-03-01' });
 
 // Main Lambda entry point
 exports.handler = async (event) => {
-    const params = JSON.parse(event.body)
-    const bucket = params["bucket"]
-    const objectKey = params["key"]
-      let tags;
-      console.log("-----INICIO-----")
+    const objectKey = JSON.parse(event.body)["key"]
+    let tags, tagQ; //This var is for Storage the tags of object
+    console.log("-----INICIO-----")
       try {
-        for (let step = 0; step < 100; step++) {
-          tags = await getObjectTags(bucket, objectKey);
-          if(Object.keys(tags).length>0){
-            break;
-          }
-        }
-        console.log(tags)
-        if(Object.keys(tags).length>0 && tags["fss-scanned"]){
-          console.log(tags)
-          return tags
+        tags = await getObjectTags(process.env.UploadBucket, objectKey);
+        tagQ = await getObjectTags(process.env.QuarantineBucket, objectKey);
+        if((Object.keys(tags).length>0 || Object.keys(tagQ).length>0) && (tags["fss-scanned"] || tagQ["fss-scanned"])){
+          return JSON.stringify(tags)  // return all tags object
         }else{
           var res = {
-            "info" : "We could not get the scan status please check the CloudWatch LogGroup or Cloud One File Storage Security Dashboard",
-            "clg" : process.env.CW_LG_FSS,
-            "fss-scanned" : false
+            "fss-scanned" : false //Return False when can't receive a response
           }
           return res;
         }
       } catch (err) {
         console.error(err);
+        console.log(err)
         return;
       }
   };
