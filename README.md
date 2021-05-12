@@ -39,7 +39,7 @@ parameter_overrides = "S3BucketToScan=\"<Name-Of-Bucket-To-Scan>\" ExternalID=\"
 sam deploy --template-file Template.yaml --stack-name <Name-Bucket-Created-Step-5>
 ```
 
-10) Copy the API-gateway-value in gui/index.html, you can get the HTTP API endpoint URL from outputs in sam-cli or CloudFormation Stack.
+10) Copy the API-gateway-value in gui/js/index.js [Line 5], you can get the HTTP API endpoint URL from outputs in sam-cli or CloudFormation Stack.
     ![Image of get Api URL](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/f2cab6e7ecc330c3c1b8c0caeb0d4093593db605/Img/api-gateway-value.png)
     ![Image of Configure Value in Index.html](https://github.com/XeniaP/Upload-Demo-C1-FSS/blob/f2cab6e7ecc330c3c1b8c0caeb0d4093593db605/Img/api-url-index.html.png)
 

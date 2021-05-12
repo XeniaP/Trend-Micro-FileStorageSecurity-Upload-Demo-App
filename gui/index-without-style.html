@@ -7,10 +7,6 @@
     <link rel="stylesheet" type="text/css" href="css/styles.css">
   </head>
   <body>
-    <div id="header">
-        <image id="logo" src="../Img/Trend_Logo.png">
-        <h1>This is a Demo of Trend Micro Cloud One - File Storage Security</h1>
-    </div>
     <div id="app">
       <h1>S3 Uploader Test - Demo Application</h1>
       <div v-if="!image">
@@ -22,14 +18,14 @@
         </br>
         <input type="text" v-if="!uploadURL" :value="name"/>
         </br>
-        <button v-if="!isHidden" v-if="!uploadURL" @click="removeImage">Remove File</button>
-        <button v-if="!isHidden" v-if="!uploadURL" @click="uploadImage" v-on:click="isHidden = !isHidden">Upload File</button>
+        <button v-if="!isHidden" v-if="!uploadURL" @click="removeImage" style="background-color: white; color: black;">Remove File</button>
+        <button v-if="!isHidden" v-if="!uploadURL" @click="uploadImage" v-on:click="isHidden = !isHidden" style="background-color: white; color: black;">Upload File</button>
         <div v-if="!uploadURL">
           <br><img id="loading" v-if="isHidden" src="css/loading.gif"><br>
         </div>
       </div>
       <h2 v-if="uploadURL">Success! File uploaded to bucket.</h2>
-      <button v-if="uploadURL" @click="checkScanResult">Check Scan Result</button>
+      <button v-if="uploadURL" @click="checkScanResult" style="background-color: white; color: black;">Check Scan Result</button>
       <span v-html="HTMLcontent"></span>
     </div>
 

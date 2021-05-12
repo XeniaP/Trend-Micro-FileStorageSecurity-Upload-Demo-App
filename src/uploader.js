@@ -8,16 +8,19 @@ const s3 = new AWS.S3()
 const URL_EXPIRATION_SECONDS = 300
 
 // Main Lambda entry point
-exports.handler = async (event, context, callback) => {
+
+var _handler = async (event, context, callback) => {
   return await getUploadURL(event)
 }
 
 const getUploadURL = async function(event) {
-  const randomID = parseInt(Math.random() * 10000000)
+  console.log("queryStringParameters", event["queryStringParameters"])
   const filetype = event["queryStringParameters"]["filetype"]
-  const Key = randomID+"."+filetype.split("/")[1]
-
-  // Get signed URL from S3
+  const filename = event["queryStringParameters"]["nameFile"]
+  
+  const Key = filename
+  
+    // Get signed URL from S3
   const s3Params = {
     Bucket: process.env.UploadBucket,
     Key,
@@ -25,9 +28,10 @@ const getUploadURL = async function(event) {
     ContentType: filetype,
   }
   const uploadURL = await s3.getSignedUrlPromise('putObject', s3Params)
-  console.log(uploadURL) 
   return JSON.stringify({
     uploadURL: uploadURL,
-    Key
+    Key, 
   })
 }
+
+exports.handler = trend_app_protect.api.aws_lambda.protectHandler(_handler);
