@@ -41,28 +41,32 @@ Parameters:
     AllowedPattern: ^[0-9a-z]+([0-9a-z-]*[0-9a-z])*$
     ConstraintDescription: S3 bucket name can include numbers, lowercase letters,
       and hyphens (-). It cannot start or end with a hyphen (-).
-    Description: The S3 bucket to use for quarantine. Specify an the name of Quarantine
-      S3.
+    Description: The S3 bucket to use for quarantine. Specify an the name of Quarantine S3.
     Default: test-quarantine
     Type: String
+
   ExternalID:
     Description: The External ID, You can get the External ID from the ScannerStack
       Parameters or by API https://cloudone.trendmicro.com/docs/file-storage-security/api-reference/#tag/External-ID
     Default: '123456789012'
     Type: String
+
   ScannerAWSAccount:
     Description: ''
     Default: '123456789012'
     Type: String
+
   ScannerSQSURL:
     Description: Scanner SQS URL, you can get the ScannerSQSURL from ScannerStack
       Outputs or by API https://cloudone.trendmicro.com/docs/file-storage-security/api-reference/tag/Stack#operation/describeStackByID
     Default: https://sqs.region.amazonaws.com/aws-account/ScannerFSS-ScannerQueue-
     Type: String
+
   AWSRegion:
     Description: AWS Region
     Default: us-east-1
     Type: String
+
   PromoteMode:
     Type: String
     AllowedValues:
@@ -105,7 +109,7 @@ Resources:
   CheckResultScan:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://upload-app-fss-demo/bd41ddafb8bfde6e1f679b3840acdc91
+      CodeUri: src/resultScan.js
       Handler: resultScan.handler
       Runtime: nodejs12.x
       Timeout: 3
@@ -134,7 +138,7 @@ Resources:
   UploadRequestFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://upload-app-fss-demo/884a4153ab6ecf75ae0a21f5d7589c69
+      CodeUri: src/uploader.js
       Handler: uploader.handler
       Runtime: nodejs12.x
       Timeout: 3
@@ -187,7 +191,7 @@ Resources:
   StorageStackFSS:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/upload-app-fss-demo/9de82f9bbb4b8c44c7d2d4c4cd272202.template
+      TemplateURL: Templates/FSS-Storage-Stack.template
       Parameters:
         ExternalID:
           Ref: ExternalID
@@ -200,7 +204,7 @@ Resources:
   PromoteOrQuarantineLambda:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://upload-app-fss-demo/b0b59fa6c4f6e3f5ece20658ff95adfe
+      CodeUri: src/handler.py
       Handler: handler.lambda_handler
       Runtime: python3.8
       MemorySize: 512
@@ -237,7 +241,7 @@ Resources:
             - Ref: AWS::NoValue
           - Fn::If:
             - QuarantineEnabled
-            - Fn::Sub: arn:${AWS::Partition}:s3:::${S3QuarantineBucket}/*
+            - Fn::Sub: arn:${AWS::Partition}:s3:::${S3QuarantineBucketDemoApp}/*
             - Ref: AWS::NoValue
       Events:
         ScanResult:

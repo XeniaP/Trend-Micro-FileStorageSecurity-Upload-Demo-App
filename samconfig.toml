@@ -8,4 +8,4 @@ s3_prefix = "upload-app2"
 region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-parameter_overrides = "S3BucketToScan=\"test\" S3QuarantineBucket=\"test-quarantine\" ExternalID=\"102847668301\" ScannerAWSAccount=\"846753579733\" ScannerSQSURL=\"https://sqs.us-east-1.amazonaws.com/846753579733/ScannerFSS-ScannerQueue-QCRQPO5\" AWSRegion=\"us-east-1\" PromoteMode=\"move\" QuarantineMode=\"move\""
+parameter_overrides = "S3BucketToScan=\"test\" S3QuarantineBucket=\"test-quarantine\" ExternalID=\"102847668301\" ScannerAWSAccount=\"846753579733\" ScannerSQSURL=\"https://sqs.us-east-1.amazonaws.com/846753579733/ScannerFSS-ScannerQueue-QCRQPO5RIJO0\" AWSRegion=\"us-east-1\" PromoteMode=\"move\" QuarantineMode=\"move\""

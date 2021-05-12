@@ -9,7 +9,7 @@ const URL_EXPIRATION_SECONDS = 300
 
 // Main Lambda entry point
 
-var _handler = async (event, context, callback) => {
+exports.handler = async (event, context, callback) => {
   return await getUploadURL(event)
 }
 
@@ -34,4 +34,3 @@ const getUploadURL = async function(event) {
   })
 }
 
-exports.handler = trend_app_protect.api.aws_lambda.protectHandler(_handler);
