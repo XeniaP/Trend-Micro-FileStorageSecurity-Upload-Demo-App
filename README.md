@@ -1,6 +1,6 @@
 # Serverless-Example-S3-Upload-Interface-for-Demo-of-CloudOne-FileStorage-Security
 
-THIS REPOSITORY IS ONLY A DEMO FOR CLOUD ONE APPLICATION SECURITY
+THIS REPOSITORY IS ONLY A DEMO FOR CLOUD ONE FILE STORAGE SECURITY
 
 [Cloud One - File Storage Security Trial -](https://cloudone.trendmicro.com/) 
 
